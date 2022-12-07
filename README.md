@@ -1,4 +1,8 @@
-# ES3PF
+# 3ASF - 3 Armonografos Sobre Figuras
+
+Si tuviese que elegir 
+
+La composición trabaja con tres armonografos de 2 péndulos distribuídos verticalmente que dibujan sobre figuras en blanco y negro.
 
 Keys:
 

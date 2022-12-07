@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<link rel="icon" type="img/png" href="./favicon.png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>ES3PF</title>
+		<title>3ASF</title>
 		<script id="fxhash-snippet">
 			//---- do not edit the following code (you can indent as you wish)
 			let alphabet =
@@ -65,6 +65,7 @@
 			body {
 				overscroll-behavior: contain;
 				background: #222;
+				font-family: sans-serif;
 			}
 			canvas {
 				padding: 0;
@@ -86,6 +87,7 @@
 			.overlay {
 				position: fixed;
 				display: flex;
+				flex-direction: column;
 				align-items: center;
 				justify-content: center;
 				top: 0;
@@ -95,12 +97,15 @@
 				background: rgb(0, 0, 0);
 				z-index: 9999;
 				opacity: 1;
+				color:#fff;
+				text-align: center;
 			}
-			.overlay img {
-				object-fit: contain;
-				object-position: center;
-				max-width: 50px;
-				border-radius: 999px;
+			.overlay h1{
+				display: block;
+				text-align: center;
+				animation: 0.5s infinite forwards alternate anim;
+				-moz-animation: 0.5s infinite forwards alternate anim;
+				-webkit-animation: 0.5s infinite forwards alternate anim;
 			}
 			.rendered {
 				-webkit-transition: opacity 2s ease-in-out;
@@ -109,14 +114,22 @@
 				-o-transition: opacity 2s ease-in-out;
 				opacity: 0;
 			}
+			@keyframes anim{
+				0%{
+					opacity: 0.5;
+				}
+				100%{
+					opacity: 0.9;
+				}
+			}
 		</style>
 	</head>
 	<body>
 		<div class="overlay">
-			<img src="./noise.gif" alt="" />
+			<h1>3ASF</h1>
 		</div>
 		<script src="./p5.min.js"></script>
 		<script src="./simplexN3D.min.js"></script>
-		<script src="./es3pf.js"></script>
+		<script src="./3asf.js"></script>
 	</body>
 </html>

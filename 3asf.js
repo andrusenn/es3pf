@@ -1,8 +1,8 @@
 /**
  *
- * ES3PF
+ * ES3A2PF
  *
- * Ensayo sobre tres pendulos y figuras
+ * Ensayo sobre 3 armonografos / 2 pendulos y figuras
  *
  *
  */
@@ -29,6 +29,7 @@ let snoise,
 	pen2,
 	invert,
 	renderFrames = 600,
+	features = [],
 	overlay;
 function setup() {
 	overlay = document.querySelector(".overlay");
@@ -94,13 +95,16 @@ function setup() {
 	pg1.push();
 	pg1.translate(0, random(-400, 400));
 	if (random() < 0.33) {
-		// Circulo
+		// Rectangulo
+		features["shape1"] = "Rectangle";
 		pg1.rect(width / 2 - w, h, w * 2, height - h * 2);
 	} else if (random() < 0.66) {
-		// Rectangulo
+		// Circulo
+		features["shape1"] = "Circle";
 		pg1.circle(width / 2, height / 2, w * 4);
 	} else {
 		// Triangulo
+		features["shape1"] = "Triangle";
 		let a = random(100, 300);
 		let b = random(200, 500);
 		pg1.triangle(
@@ -124,12 +128,15 @@ function setup() {
 	pg1.translate(0, random(-200, 200));
 	if (random() < 0.33) {
 		// Circulo
+		features["shape2"] = "Circle";
 		pg1.circle(width / 2, height / 2, r * 2);
 	} else if (random() < 0.66) {
 		// Rectangulo
+		features["shape2"] = "Rectangle";
 		pg1.rect(width / 2 - r, height / 2 - r, r * 2, r * 2);
 	} else {
 		// Triangulo
+		features["shape2"] = "Triangle";
 		let a = random(20, 150);
 		let b = random(50, 150);
 		pg1.triangle(
@@ -192,7 +199,7 @@ function setup() {
 	for (let i = 0; i < renderFrames; i++) {
 		pg2.push();
 		pg2.translate(width / 2, height / 2);
-		h1.update((x, y) => {
+		h1.update((x, y, p) => {
 			if (brightness(pg1.get(width / 2 + x + t1, height / 2 + y)) > 60) {
 				pg2.fill(0, 40);
 			} else {
@@ -268,47 +275,88 @@ function setup() {
 	noSmooth();
 	let min = random(5, 50);
 	let max = random(60, 250);
-	let posx = random(max, width - max);
-	let posy = random(max, height - max);
+	let posx = random(max * 2, width - max * 2);
+	let posy = random(max * 2, height - max * 2);
 	for (let i = 0; i < 50; i++) {
 		if (random() < 0.5) {
 			let im = get(
 				0,
-				posy + round(height / 2 - random(min, max)),
+				posy + round(height / 2 + random(-min, min)) / 2,
 				width,
 				round(random(min, max)),
 			);
-			set(0, posy + round(height / 2 - random(min, max)), im);
+			set(0, posy + round(height / 2 + random(-min, min)) / 2, im);
 		} else {
 			let im = get(
-				posx + round(width / 2 - random(min, max)),
+				posx + round(width / 2 + random(-min, min)) / 2,
 				0,
 				round(random(20, 150)),
 				height,
 			);
-			set(posx + round(width / 2 - random(min, max)), 0, im);
+			set(posx + round(width / 2 + random(-min, min)) / 2, 0, im);
 		}
 	}
 	smooth();
-	if (random() < 0.66) {
+	if (random() < 0.5) {
 		if (random() < 0.33) {
 			mirrorY();
+			features["simetry"] = "Y";
 			console.log("mirrorY");
 		} else if (random() < 0.66) {
 			mirrorX();
+			features["simetry"] = "X";
 			console.log("mirrorX");
 		} else {
+			features["simetry"] = "XY";
 			mirrorY();
 			mirrorX();
+		}
+	} else {
+		features["simetry"] = "None";
+	}
+
+	// Cortar 2
+	features["dislocation"] = "Only";
+	if (random() < 0.15) {
+		features["dislocation"] = "extra";
+		noSmooth();
+		for (let i = 0; i < 100; i++) {
+			let a = random(TAU);
+			let r = random(50, 400);
+			let x = width / 2 + cos(a) * r;
+			let y = height / 2 + sin(a) * r;
+			let cs = map(dist(width / 2, height / 2, x, y), 50, 400, 40, 4);
+			let im = get(x, y, round(cs), round(cs));
+			let n = snoise(x * 0.01, y * 0.012, 0);
+			a = a + map(n, -1, 1, -PI, PI);
+			x = width / 2 + cos(a) * r;
+			y = height / 2 + sin(a) * r;
+			set(round(x), round(y), im);
 		}
 	}
 	let all = get(0, 0, width, height);
 
+	// Features
+	window.$fxhashFeatures = {
+		"Shape 1": features["shape1"],
+		"Shape 2": features["shape2"],
+		Simetry: features["simetry"],
+		Dislocation: features["dislocation"],
+	};
+	console.log(window.$fxhashFeatures);
+
+	// Print
+	push();
 	noStroke();
 	fill(0);
 	rect(0, 0, width, height);
+	translate(width / 2, height / 2);
+	rotate(floor(random(2)) * PI);
+	translate(-width / 2, -height / 2);
 	image(all, 0, 0);
+	pop();
 	fxpreview();
+
 	// End
 	overlay.classList.add("rendered");
 	overlay.addEventListener("transitionend", () => {
@@ -318,9 +366,9 @@ function setup() {
 		overlay.style.display = "none";
 	}, 20000);
 
-	document.title = `ES3PF | Andr\u00e9s Senn | ... - 2022`;
+	document.title = `3ASF | Andr\u00e9s Senn | Dec / 2022`;
 	console.log(
-		`%cES3PF | Andr\u00e9s Senn 2022 | ....`,
+		`%c3ASF | Andr\u00e9s Senn 2022 | Code: https://github.com/andrusenn/es3pf`,
 		"background:#333;border-radius:10px;background-size:15%;color:#eee;padding:10px;font-size:15px;text-align:center;",
 	);
 }
@@ -406,7 +454,7 @@ class Harmonograph {
 			this.pendulums.forEach((p, i) => {
 				if (this.pendulums.length == 1) {
 					if (typeof fn === "function") {
-						fn(p.x, p.y, i);
+						fn(p.x, p.y, p, i);
 					}
 				} else if (i == 0) {
 					// Primero
@@ -417,7 +465,7 @@ class Harmonograph {
 					// Los siguientes toman como referencia el anterior
 					p.update(px, py);
 					if (typeof fn === "function") {
-						fn(p.x, p.y);
+						fn(p.x, p.y, p);
 					}
 					px = p.x;
 					py = p.y;
