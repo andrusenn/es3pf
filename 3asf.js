@@ -1,10 +1,10 @@
 /**
+ * 3ASF
  *
- * ES3A2PF
+ * Ensayo sobre 3 armonografos sobre figuras
  *
- * Ensayo sobre 3 armonografos / 2 pendulos y figuras
- *
- *
+ * Andrés Senn / Dec - 2022
+ * fxhash.xyz project
  */
 
 // Commons
@@ -40,8 +40,9 @@ function setup() {
 	cv = createCanvas(1200, 1800);
 	pg1 = createGraphics(width, height);
 	pg2 = createGraphics(width, height);
-	cv.id("ES3PF");
-	cv.class("ES3PF");
+	cv.id("3ASF");
+	cv.class("3ASF");
+
 	// Pixel density param ------------
 	const uparams = getURLParams();
 	if (uparams.pd) {
@@ -57,10 +58,16 @@ function setup() {
 	// --------------------------------
 	noLoop();
 	background(255);
-	//
+	// Dist entre armonografos
 	pdist = 350; //random(200, 400);
+
+	// Canvas 1
 	pg1.background(255);
+
+	// Canvas 2
 	pg2.background(255, 255, 255, 0);
+
+	// Inversion B/N
 	invert = random() < 0.5;
 
 	// Fondo
@@ -71,27 +78,19 @@ function setup() {
 	}
 	pg1.noStroke();
 
-	// Medio
-	if (random() < 0.5) {
-		if (invert) {
-			pg1.fill(255);
-		} else {
-			pg1.fill(0);
-		}
-	}
-
-	// Formas/figuras
-	pg1.fill(random(55, 200), random(10, 255));
-
+	// Relleno figuras Canvas 1
 	if (invert) {
 		pg1.fill(255);
 	} else {
 		pg1.fill(0);
 	}
+
+	// Dimensiones
 	let w = random(100, 300);
 	let h = random(400, 600);
 	let r = Math.min(w, h);
-	//
+
+	// Dibuja figuras Canvas 1
 	pg1.push();
 	pg1.translate(0, random(-400, 400));
 	if (random() < 0.33) {
@@ -118,12 +117,15 @@ function setup() {
 	}
 	pg1.pop();
 
+	// Invierte tonalidad Canvas 1
 	if (invert) {
 		pg1.fill(0);
 	} else {
 		pg1.fill(360);
 	}
 
+	// Vuelve a dibujar figuras tono invertido
+	// Canvas 1
 	pg1.push();
 	pg1.translate(0, random(-200, 200));
 	if (random() < 0.33) {
@@ -192,9 +194,18 @@ function setup() {
 	// Agregar al armonografo
 	h3 = new Harmonograph(pends);
 
-	t1 = 0; //random(-300, 300);
-	t2 = 0; //random(-300, 300);
-	t3 = 0; //random(-300, 300);
+	// Transporte eje X de la toma de brillo del fondo/figuras
+	// para invertir el tono del armonografo
+	t1 = 0;
+	t2 = 0;
+	t3 = 0;
+	features["displacement"] = "None";
+	if (random() < 0.3) {
+		t1 = random(-300, 300);
+		t2 = random(-300, 300);
+		t3 = random(-300, 300);
+		features["displacement"] = "Yes";
+	}
 
 	for (let i = 0; i < renderFrames; i++) {
 		pg2.push();
@@ -215,7 +226,9 @@ function setup() {
 			h1.pendulums[1].r1 = map(n, -1, 1, 20, 300);
 		}, 300);
 		pg2.pop();
+	}
 
+	for (let i = 0; i < renderFrames; i++) {
 		pg2.push();
 		pg2.translate(width / 2, height / 2 - pdist);
 		h2.update((x, y) => {
@@ -238,7 +251,9 @@ function setup() {
 			h2.pendulums[1].r1 = map(n, -1, 1, 20, 300);
 		}, 300);
 		pg2.pop();
+	}
 
+	for (let i = 0; i < renderFrames; i++) {
 		pg2.push();
 		pg2.translate(width / 2, height / 2 + pdist);
 		h3.update((x, y) => {
@@ -263,11 +278,15 @@ function setup() {
 		pg2.pop();
 	}
 
+	// Imprime Canvas 1
+	// Con desplazamiento vertical
 	push();
 	translate(0, random(-200, 200));
 	image(pg1, 0, 0);
 	pop();
 
+	// Imprime Canvas 2
+	push();
 	image(pg2, 0, 0);
 	pop();
 
@@ -296,27 +315,29 @@ function setup() {
 			set(posx + round(width / 2 + random(-min, min)) / 2, 0, im);
 		}
 	}
+
+	// Aplica simetrias
 	smooth();
-	if (random() < 0.5) {
-		if (random() < 0.33) {
+	if (random() < 0.4) {
+		if (random() < 0.4) {
 			mirrorY();
-			features["simetry"] = "Y";
+			features["symmetry"] = "Y";
 			console.log("mirrorY");
-		} else if (random() < 0.66) {
+		} else if (random() < 0.8) {
 			mirrorX();
-			features["simetry"] = "X";
+			features["symmetry"] = "X";
 			console.log("mirrorX");
 		} else {
-			features["simetry"] = "XY";
+			features["symmetry"] = "XY";
 			mirrorY();
 			mirrorX();
 		}
 	} else {
-		features["simetry"] = "None";
+		features["symmetry"] = "None";
 	}
 
 	// Cortar 2
-	features["dislocation"] = "Only";
+	features["dislocation"] = "Single";
 	if (random() < 0.15) {
 		features["dislocation"] = "extra";
 		noSmooth();
@@ -334,27 +355,38 @@ function setup() {
 			set(round(x), round(y), im);
 		}
 	}
-	let all = get(0, 0, width, height);
-
-	// Features
-	window.$fxhashFeatures = {
-		"Shape 1": features["shape1"],
-		"Shape 2": features["shape2"],
-		Simetry: features["simetry"],
-		Dislocation: features["dislocation"],
-	};
-	console.log(window.$fxhashFeatures);
 
 	// Print
+	// Vuelve a imprimir rotado
+	// con fondo negro para evitar transparencias
+	const all = get(0, 0, width, height);
+	let rot = floor(random(2)) * PI;
+	features["rot"] = "No";
+	if (rot > 0) {
+		features["rot"] = "Yes";
+	}
 	push();
 	noStroke();
 	fill(0);
 	rect(0, 0, width, height);
 	translate(width / 2, height / 2);
-	rotate(floor(random(2)) * PI);
+	rotate(rot);
 	translate(-width / 2, -height / 2);
 	image(all, 0, 0);
 	pop();
+
+	// Features
+	window.$fxhashFeatures = {
+		"Shape 1": features["shape1"],
+		"Shape 2": features["shape2"],
+		Symmetry: features["symmetry"],
+		"Upside Down": features["rot"],
+		Displacement: features["displacement"],
+		Dislocation: features["dislocation"],
+	};
+	console.log(window.$fxhashFeatures);
+
+	// Preview
 	fxpreview();
 
 	// End
