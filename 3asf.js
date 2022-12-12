@@ -1,7 +1,7 @@
 /**
  * 3ASF
  *
- * Ensayo sobre 3 armonografos sobre figuras
+ * 3 armonografos sobre figuras
  *
  * Andrés Senn / Dec - 2022
  * fxhash.xyz project
@@ -14,23 +14,18 @@ let snoise,
 	pends = [],
 	pg1,
 	pg2,
-	pg1tx = 0,
-	pg1ty = 0,
 	h1,
 	h2,
 	h3,
 	t1,
 	t2,
 	t3,
-	p,
-	cy = 0,
 	pdist = 0,
-	pen1,
-	pen2,
 	invert,
 	renderFrames = 600,
 	features = [],
 	overlay;
+
 function setup() {
 	overlay = document.querySelector(".overlay");
 	// Commons -----------------------
@@ -40,8 +35,8 @@ function setup() {
 	cv = createCanvas(1200, 1800);
 	pg1 = createGraphics(width, height);
 	pg2 = createGraphics(width, height);
-	cv.id("3ASF");
-	cv.class("3ASF");
+	cv.id("_3ASF");
+	cv.class("_3ASF");
 
 	// Pixel density param ------------
 	const uparams = getURLParams();
@@ -322,11 +317,9 @@ function setup() {
 		if (random() < 0.4) {
 			mirrorY();
 			features["symmetry"] = "Y";
-			console.log("mirrorY");
 		} else if (random() < 0.8) {
 			mirrorX();
 			features["symmetry"] = "X";
-			console.log("mirrorX");
 		} else {
 			features["symmetry"] = "XY";
 			mirrorY();
@@ -357,7 +350,7 @@ function setup() {
 	}
 
 	// Print
-	// Vuelve a imprimir rotado
+	// Vuelve a imprimir rotado o no
 	// con fondo negro para evitar transparencias
 	const all = get(0, 0, width, height);
 	let rot = floor(random(2)) * PI;
@@ -384,7 +377,6 @@ function setup() {
 		Displacement: features["displacement"],
 		Dislocation: features["dislocation"],
 	};
-	console.log(window.$fxhashFeatures);
 
 	// Preview
 	fxpreview();
@@ -400,7 +392,7 @@ function setup() {
 
 	document.title = `3ASF | Andr\u00e9s Senn | Dec / 2022`;
 	console.log(
-		`%c3ASF | Andr\u00e9s Senn 2022 | Code: https://github.com/andrusenn/es3pf`,
+		`%c3ASF | Andr\u00e9s Senn | Dec/2022 | Code: https://github.com/andrusenn/es3pf`,
 		"background:#333;border-radius:10px;background-size:15%;color:#eee;padding:10px;font-size:15px;text-align:center;",
 	);
 }
